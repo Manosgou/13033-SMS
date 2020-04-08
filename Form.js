@@ -15,7 +15,7 @@ export default class Form extends Component {
             lastname: '',
             firstname: '',
             address: '',
-            finalMessage: '',
+
         };
 
 
@@ -37,7 +37,7 @@ export default class Form extends Component {
         if (this.checkInput() === true && this.checkSelection() === true) {
             const { result } = await SMS.sendSMSAsync(
                 ['13033'],
-                this.state.finalMessage
+                this.getFinalMsg()
             );
         } else {
             alert('Παρακαλώ συμπληρώστε όλα τα στοιχεία');
@@ -76,214 +76,216 @@ export default class Form extends Component {
             const lastname = await AsyncStorage.getItem('lastname')
             const address = await AsyncStorage.getItem('address')
 
-        
 
-        if (firstname !== null && lastname !==null && address !==null) {
-            this.setState({
-                    firstname:firstname,
-                    lastname:lastname,
-                    address:address
 
-            })
+            if (firstname !== null && lastname !== null && address !== null) {
+                this.setState({
+                    firstname: firstname,
+                    lastname: lastname,
+                    address: address
 
-            }else{
+                })
+
+            } else {
                 alert('Δεν έχουν αποθηκευτεί στοιχεία')
             }
-    } catch(e) {
-        console.log('error reading value')
+        } catch (e) {
+            console.log('error reading value')
+        }
     }
-}
 
 
 
-checkSelection = () => {
-    if (this.state.selection != '') {
-        return true
-    } else {
-        return false
+    checkSelection = () => {
+        if (this.state.selection != '') {
+            return true
+        } else {
+            return false
+        }
     }
-}
 
-checkInput = () => {
+    checkInput = () => {
 
-    if (this.state.firstname.trim() != '') {
-        if (this.state.lastname.trim() != '') {
-            if (this.state.address.trim() != '') {
-                return true
+        if (this.state.firstname.trim() != '') {
+            if (this.state.lastname.trim() != '') {
+                if (this.state.address.trim() != '') {
+                    return true
 
+
+                }
 
             }
+        } else {
+            return false
+
 
         }
-    } else {
-        return false
+
+    };
+
+    getFinalMsg() {
+        return this.state.selection.substring(0, 1) + " " + this.state.firstname + this.state.lastname + " " + this.state.address
+    }
+
+
+    render() {
+
+        const styles = StyleSheet.create({
+            mainContainer: {
+                flex: 1,
+                flexDirection: 'column',
+                justifyContent: 'space-between',
+                width: 300,
+
+
+            },
+            textInput: {
+                borderBottomWidth: 1,
+                borderBottomColor: "grey"
+
+            },
+            textInputContainer: {
+                flex: 1,
+                flexDirection: 'column',
+                justifyContent: 'space-between',
+
+            },
+            button: {
+                flex: 1,
+                flexDirection: 'column',
+                justifyContent: 'space-around',
+                padding: 30
+            },
+
+            previewBox: {
+                borderColor: "grey",
+                borderWidth: 2,
+                borderRadius: 10,
+                padding: 10
+            },
+            previewText: {
+                textAlign: "center",
+                marginTop: 30
+
+            },
+            createdBy: {
+                fontSize: 7,
+                textAlign: 'center',
+                marginTop: 10
+            },
+
+
+        });
+
+
+
+
+        let fselection = [{
+
+            value: '1)Μετάβαση σε φαρμακείο',
+
+        }, {
+
+            value: '2)Μετάβαση σε εν λειτουργία καταστήματα',
+
+        }, {
+
+            value: '3)Μετάβαση σε τράπεζα',
+
+        },
+        {
+
+            value: '4)Παροχή βοήθειας',
+
+        },
+        {
+
+            value: '5)Μετάβαση σε τελετή',
+
+        },
+        {
+
+            value: '6)Σύντομη μετακίνηση',
+
+        },];
+
+
+
+
+
+        return (<>
+            <Appbar />
+            <View style={styles.mainContainer}>
+
+
+
+                <Dropdown
+                    value={this.state.selection || ''}
+                    label='Επιλογή:'
+                    data={fselection}
+                    onChangeText={value => this.handleInputChange('selection', value)}
+
+                />
+                <View style={styles.textInputContainer}>
+                    <Text>Όνομα:</Text>
+                    <TextInput
+                        style={styles.textInput}
+                        defaultValue={this.state.firstname}
+                        onChangeText={value => this.handleInputChange('firstname', value)}
+                    />
+
+
+                    <Text>Επίθετο:</Text>
+                    <TextInput
+                        style={styles.textInput}
+                        defaultValue={this.state.lastname}
+                        onChangeText={value => this.handleInputChange('lastname', value)}
+                    />
+
+
+
+                    <Text>Διεύθυνση:</Text>
+                    <TextInput
+                        style={styles.textInput}
+                        defaultValue={this.state.address}
+                        onChangeText={value => this.handleInputChange('address', value)}
+
+                    />
+                </View>
+                <Text style={styles.previewText}>Προεπισκόπηση</Text>
+                <Text style={styles.previewBox}>{this.getFinalMsg()}</Text>
+                <View style={styles.button}>
+                    <Button
+                        title="Αποστολη"
+                        onPress={this.onPress}
+
+                    />
+                    <Button
+                        title="Αποθηκευση στοιχειων"
+                        onPress={this.storeData}
+
+                    />
+                    <Button
+                        title="Φορτωση στοιχειων"
+                        onPress={this.getData}
+
+                    />
+
+
+                </View>
+                <Text style={styles.createdBy}>
+                    Created by Manos Gouvrikos
+                </Text>
+
+            </View >
+        </>
+        );
+
+
+
 
 
     }
-
-};
-
-
-
-
-render() {
-
-    const styles = StyleSheet.create({
-        mainContainer: {
-            flex: 1,
-            flexDirection: 'column',
-            justifyContent: 'space-between',
-            width: 300,
-            
-
-        },
-        textInput: {
-            borderBottomWidth: 1,
-            borderBottomColor: "grey"
-
-        },
-        textInputContainer: {
-            flex: 1,
-            flexDirection: 'column',
-            justifyContent: 'space-between',
-            
-        },
-        button: {
-            flex: 1,
-            flexDirection: 'column',
-            justifyContent: 'space-around',
-            padding:30
-        },
-
-        previewBox: {
-            borderColor: "grey",
-            borderWidth: 2,
-            borderRadius: 10,
-            padding: 10
-        },
-        previewText: {
-            textAlign: "center",
-            marginTop: 30
-
-        },
-        createdBy: {
-            fontSize: 7,
-            textAlign: 'center',
-            marginTop: 10
-        },
-
-
-    });
-
-
-
-
-    let fselection = [{
-
-        value: '1)Μετάβαση σε φαρμακείο',
-
-    }, {
-
-        value: '2)Μετάβαση σε εν λειτουργία καταστήματα',
-
-    }, {
-
-        value: '3)Μετάβαση σε τράπεζα',
-
-    },
-    {
-
-        value: '4)Παροχή βοήθειας',
-
-    },
-    {
-
-        value: '5)Μετάβαση σε τελετή',
-
-    },
-    {
-
-        value: '6)Σύντομη μετακίνηση',
-
-    },];
-
-
-
-    this.state.finalMessage = this.state.selection.substring(0, 1) + " " + this.state.firstname + this.state.lastname + " " + this.state.address
-
-    return (<>
-        <Appbar />
-        <View style={styles.mainContainer}>
-
-
-
-            <Dropdown
-                value={this.state.selection || ''}
-                label='Επιλογή:'
-                data={fselection}
-                onChangeText={value => this.handleInputChange('selection', value)}
-
-            />
-            <View style={styles.textInputContainer}>
-                <Text>Όνομα:</Text>
-                <TextInput
-                    style={styles.textInput}
-                    defaultValue={this.state.firstname}
-                    onChangeText={value => this.handleInputChange('firstname', value)}
-                />
-
-
-                <Text>Επίθετο:</Text>
-                <TextInput
-                    style={styles.textInput}
-                    defaultValue={this.state.lastname}
-                    onChangeText={value => this.handleInputChange('lastname', value)}
-                />
-
-
-
-                <Text>Διεύθυνση:</Text>
-                <TextInput
-                    style={styles.textInput}
-                    defaultValue={this.state.address}
-                    onChangeText={value => this.handleInputChange('address', value)}
-
-                />
-            </View>
-            <Text style={styles.previewText}>Προεπισκόπηση</Text>
-            <Text style={styles.previewBox}>{this.state.finalMessage}</Text>
-            <View style={styles.button}>
-                <Button
-                    title="Αποστολή"
-                    onPress={this.onPress}
-
-                />
-                <Button
-                    title="Αποθήκευση στοιχείων"
-                    onPress={this.storeData}
-
-                />
-                <Button
-                    title="Φόρτωση στοιχείων"
-                    onPress={this.getData}
-
-                />
-
-
-            </View>
-            <Text style={styles.createdBy}>
-                Created by Manos Gouvrikos
-                </Text>
-
-        </View >
-    </>
-    );
-
-
-
-
-
-}
 
 
 
