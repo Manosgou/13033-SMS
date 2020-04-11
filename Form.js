@@ -34,13 +34,20 @@ export default class Form extends Component {
 
 
     onPress = async () => {
-        if (this.checkInput() === true && this.checkSelection() === true) {
-            const { result } = await SMS.sendSMSAsync(
-                ['13033'],
-                this.getFinalMsg()
-            );
+        const isAvailable = await SMS.isAvailableAsync();
+        if (isAvailable) {
+            console.log("SMS is available on this device")
+            if (this.checkInput() === true && this.checkSelection() === true) {
+                const { result } = await SMS.sendSMSAsync(
+                    ['13033'],
+                    this.getFinalMsg()
+                );
+            } else {
+                alert('Παρακαλώ συμπληρώστε όλα τα στοιχεία');
+            }
         } else {
-            alert('Παρακαλώ συμπληρώστε όλα τα στοιχεία');
+            alert("Το κινητό σας δεν υποστηρίζει αποστολή μηνυμάτων SMS")
+
         }
 
 
