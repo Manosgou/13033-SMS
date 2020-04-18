@@ -59,16 +59,27 @@ export default class Form extends Component {
 
     storeData = async () => {
         if (this.checkInput() === true) {
-            try {
 
-                await AsyncStorage.setItem('firstname', this.state.firstname)
-                await AsyncStorage.setItem('lastname', this.state.lastname)
-                await AsyncStorage.setItem('address', this.state.address)
-                alert('Επιτυχής αποθήκεσυη!\nΌνομα:' + this.state.firstname + '\nΕπίθετο:' + this.state.lastname + '\nΔιεύθυνση:' + this.state.address)
+            const firstname = await AsyncStorage.getItem('firstname')
+            const lastname = await AsyncStorage.getItem('lastname')
+            const address = await AsyncStorage.getItem('address')
+            
+            if (firstname === this.state.firstname && lastname === this.state.lastname && address === this.state.address) {
 
-            } catch (e) {
-                console.log('saving error')
+                alert('Τα στοιχεία έχουν ήδη αποθηκευτεί')
+                
+            } else {
+                try {
 
+                    await AsyncStorage.setItem('firstname', this.state.firstname)
+                    await AsyncStorage.setItem('lastname', this.state.lastname)
+                    await AsyncStorage.setItem('address', this.state.address)
+                    alert('Επιτυχής αποθήκεσυη!\nΌνομα:' + this.state.firstname + '\nΕπίθετο:' + this.state.lastname + '\nΔιεύθυνση:' + this.state.address)
+
+                } catch (e) {
+                    console.log('saving error')
+
+                }
             }
 
         } else {
@@ -82,7 +93,6 @@ export default class Form extends Component {
             const firstname = await AsyncStorage.getItem('firstname')
             const lastname = await AsyncStorage.getItem('lastname')
             const address = await AsyncStorage.getItem('address')
-
 
 
             if (firstname !== null && lastname !== null && address !== null) {
