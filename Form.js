@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import { Dropdown } from 'react-native-material-dropdown';
-import { StyleSheet, Text, View, TextInput, Button } from 'react-native';
+import { StyleSheet, Text, View, TextInput, Picker, TouchableOpacity } from 'react-native';
 import * as SMS from 'expo-sms';
 import { AsyncStorage } from "react-native";
 
@@ -63,11 +62,11 @@ export default class Form extends Component {
             const firstname = await AsyncStorage.getItem('firstname')
             const lastname = await AsyncStorage.getItem('lastname')
             const address = await AsyncStorage.getItem('address')
-            
+
             if (firstname === this.state.firstname && lastname === this.state.lastname && address === this.state.address) {
 
                 alert('Τα στοιχεία έχουν ήδη αποθηκευτεί')
-                
+
             } else {
                 try {
 
@@ -141,7 +140,7 @@ export default class Form extends Component {
     };
 
     getFinalMsg() {
-        return this.state.selection.substring(0, 1) + " " + this.state.firstname + this.state.lastname + " " + this.state.address
+        return this.state.selection + " " + this.state.firstname + this.state.lastname + " " + this.state.address
     }
 
 
@@ -158,7 +157,8 @@ export default class Form extends Component {
             },
             textInput: {
                 borderBottomWidth: 1,
-                borderBottomColor: "grey"
+                borderBottomColor: "grey",
+                color: '#eee'
 
             },
             textInputContainer: {
@@ -166,30 +166,59 @@ export default class Form extends Component {
                 flexDirection: 'column',
                 justifyContent: 'space-between',
 
+
             },
-            button: {
+            buttonsContainer: {
                 flex: 1,
                 flexDirection: 'column',
                 justifyContent: 'space-around',
-                padding: 30
+                padding: 30,
+                color: '#006400'
             },
 
             previewBox: {
                 borderColor: "grey",
                 borderWidth: 2,
                 borderRadius: 10,
-                padding: 10
+                padding: 10,
+                color: '#eee'
+
             },
             previewText: {
                 textAlign: "center",
-                marginTop: 30
+                marginTop: 30,
+                color: '#eee'
 
             },
             createdBy: {
                 fontSize: 7,
                 textAlign: 'center',
-                marginTop: 10
+                marginTop: 10,
+                color: '#eee'
             },
+            picker: {
+
+                color: '#eee',
+
+
+
+            },
+            pickerContainer: {
+
+                marginTop: 20,
+            },
+            button: {
+                alignItems: "center",
+                backgroundColor: "#DDDDDD",
+                padding: 10,
+                borderWidth: 1,
+                borderColor: 'rgba(0,0,0,0.2)',
+                justifyContent: 'center',
+                borderRadius: 20,
+                color:'#121212'
+            },
+
+
 
 
         });
@@ -197,34 +226,6 @@ export default class Form extends Component {
 
 
 
-        let fselection = [{
-
-            value: '1)Μετάβαση σε φαρμακείο',
-
-        }, {
-
-            value: '2)Μετάβαση σε εν λειτουργία καταστήματα',
-
-        }, {
-
-            value: '3)Μετάβαση σε τράπεζα',
-
-        },
-        {
-
-            value: '4)Παροχή βοήθειας',
-
-        },
-        {
-
-            value: '5)Μετάβαση σε τελετή',
-
-        },
-        {
-
-            value: '6)Σύντομη μετακίνηση',
-
-        },];
 
 
 
@@ -233,18 +234,26 @@ export default class Form extends Component {
         return (<>
             <Appbar />
             <View style={styles.mainContainer}>
+                <View style={styles.pickerContainer}>
+                    <Text style={{ color: '#eee' }}>Λόγος μετακίνησης:</Text>
+                    <Picker
+                        selectedValue={this.state.selection || ''}
+                        style={styles.picker}
+                        onValueChange={value => this.handleInputChange('selection', value)}
+                        prompt='Επιλέγξτε λόγο μετακίνησης'
+                        mode='dialog'
+                    >
 
-
-
-                <Dropdown
-                    value={this.state.selection || ''}
-                    label='Επιλογή:'
-                    data={fselection}
-                    onChangeText={value => this.handleInputChange('selection', value)}
-
-                />
+                        <Picker.Item label="Μετάβαση σε φαρμακείο ή στον γιατρό." value="1" />
+                        <Picker.Item label="Μετάβαση σε εν λειτουργία κατάστημα." value="2" />
+                        <Picker.Item label="Μετάβαση στην τράπεζα, στο μέτρο." value="3" />
+                        <Picker.Item label="Κίνηση για παροχή βοήθειας." value="4" />
+                        <Picker.Item label="Μετάβαση σε τελετή(γάμος, βάφτιση)." value="5" />
+                        <Picker.Item label="Σύντομη μετακίνηση,σωματική άσκηση." value="6" />
+                    </Picker>
+                </View>
                 <View style={styles.textInputContainer}>
-                    <Text>Όνομα:</Text>
+                    <Text style={{ color: '#eee' }}>Όνομα:</Text>
                     <TextInput
                         style={styles.textInput}
                         defaultValue={this.state.firstname}
@@ -252,7 +261,7 @@ export default class Form extends Component {
                     />
 
 
-                    <Text>Επίθετο:</Text>
+                    <Text style={{ color: '#eee' }}>Επίθετο:</Text>
                     <TextInput
                         style={styles.textInput}
                         defaultValue={this.state.lastname}
@@ -261,7 +270,7 @@ export default class Form extends Component {
 
 
 
-                    <Text>Διεύθυνση:</Text>
+                    <Text style={{ color: '#eee' }}>Διεύθυνση:</Text>
                     <TextInput
                         style={styles.textInput}
                         defaultValue={this.state.address}
@@ -269,24 +278,30 @@ export default class Form extends Component {
 
                     />
                 </View>
-                <Text style={styles.previewText}>Προεπισκόπηση</Text>
+                <Text style={styles.previewText}>Προεπισκόπηση μηνύματος</Text>
                 <Text style={styles.previewBox}>{this.getFinalMsg()}</Text>
-                <View style={styles.button}>
-                    <Button
-                        title="Αποστολη"
+                <View style={styles.buttonsContainer}>
+                    <TouchableOpacity
+                        style={styles.button}
+
                         onPress={this.onPress}
 
-                    />
-                    <Button
-                        title="Αποθηκευση στοιχειων"
+                    >
+                        <Text>Αποστολη</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        style={styles.button}
                         onPress={this.storeData}
 
-                    />
-                    <Button
-                        title="Φορτωση στοιχειων"
+                    >
+                        <Text>Αποθηκευση στοιχειων</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
                         onPress={this.getData}
-
-                    />
+                        style={styles.button}
+                    >
+                        <Text>Φορτωση στοιχειων</Text>
+                    </TouchableOpacity>
 
 
                 </View>

@@ -14,6 +14,7 @@ const styles = StyleSheet.create({
         height: 80,
         paddingVertical: 0,
         paddingHorizontal: 8,
+        backgroundColor:'#006400'
     },
     center: {
         flex: 1,
@@ -46,7 +47,7 @@ export default function Topbar() {
 
 
                 <View style={styles.center}>
-                    <Text style={styles.title}>13033-SMS</Text>
+                    <Text style={styles.title}>13033-SMS📨</Text>
                 </View>
 
             </Appbar >
