@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, TextInput, Picker, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, AsyncStorage, Picker } from 'react-native';
 import * as SMS from 'expo-sms';
-import { AsyncStorage } from "react-native";
 
 import Appbar from './Appbar.js';
 
@@ -25,10 +24,12 @@ export default class Form extends Component {
 
 
     handleInputChange = (inputName, inputValue) => {
-        this.setState(state => ({
-            ...state,
-            [inputName]: inputValue
-        }))
+        if (inputValue != "0") {
+            this.setState(state => ({
+                ...state,
+                [inputName]: inputValue
+            }))
+        }
     }
 
 
@@ -215,7 +216,7 @@ export default class Form extends Component {
                 borderColor: 'rgba(0,0,0,0.2)',
                 justifyContent: 'center',
                 borderRadius: 20,
-                color:'#121212'
+                color: '#121212'
             },
 
 
@@ -237,13 +238,16 @@ export default class Form extends Component {
                 <View style={styles.pickerContainer}>
                     <Text style={{ color: '#eee' }}>Λόγος μετακίνησης:</Text>
                     <Picker
+                        defaultValue='test'
                         selectedValue={this.state.selection || ''}
                         style={styles.picker}
                         onValueChange={value => this.handleInputChange('selection', value)}
-                        prompt='Επιλέγξτε λόγο μετακίνησης'
                         mode='dialog'
+
                     >
 
+
+                        <Picker.Item label="Επιλέγξτε λόγο μετακίνησης" value="0" color="grey" />
                         <Picker.Item label="Μετάβαση σε φαρμακείο ή στον γιατρό." value="1" />
                         <Picker.Item label="Μετάβαση σε εν λειτουργία κατάστημα." value="2" />
                         <Picker.Item label="Μετάβαση στην τράπεζα, στο μέτρο." value="3" />
