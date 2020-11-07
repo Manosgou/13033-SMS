@@ -12,8 +12,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Picker } from "@react-native-picker/picker";
 
 //Colors
-import {Colors} from '../Colors';
-
+import { Colors } from "../Colors";
 
 export default class Form extends Component {
   constructor(props) {
@@ -36,7 +35,7 @@ export default class Form extends Component {
     }
   };
 
-  onPress = async () => {
+  sendSMS = async () => {
     const isAvailable = await SMS.isAvailableAsync();
     if (isAvailable) {
       console.log("SMS is available on this device");
@@ -55,21 +54,26 @@ export default class Form extends Component {
 
   storeData = async () => {
     if (this.checkInput() === true) {
-      const firstname = await AsyncStorage.getItem("firstname");
-      const lastname = await AsyncStorage.getItem("lastname");
-      const address = await AsyncStorage.getItem("address");
-
+        let data={};
+      try {
+        data = JSON.parse(await AsyncStorage.getItem("@data"));
+      } catch (e) {
+        console.log("saving error");
+      }
       if (
-        firstname === this.state.firstname &&
-        lastname === this.state.lastname &&
-        address === this.state.address
+        data.firstname === this.state.firstname &&
+        data.lastname === this.state.lastname &&
+        data.address === this.state.address
       ) {
         alert("Τα στοιχεία έχουν ήδη αποθηκευτεί");
       } else {
+        let data = {
+          lastname: this.state.lastname,
+          firstname: this.state.firstname,
+          address: this.state.address,
+        };
         try {
-          await AsyncStorage.setItem("firstname", this.state.firstname);
-          await AsyncStorage.setItem("lastname", this.state.lastname);
-          await AsyncStorage.setItem("address", this.state.address);
+          await AsyncStorage.setItem("@data", JSON.stringify(data));
           alert(
             "Επιτυχής αποθήκεσυη!\nΌνομα:" +
               this.state.firstname +
@@ -89,15 +93,16 @@ export default class Form extends Component {
 
   getData = async () => {
     try {
-      const firstname = await AsyncStorage.getItem("firstname");
-      const lastname = await AsyncStorage.getItem("lastname");
-      const address = await AsyncStorage.getItem("address");
-
-      if (firstname !== null && lastname !== null && address !== null) {
+      const data = JSON.parse(await AsyncStorage.getItem("@data"));
+      if (
+        data.firstname !== null &&
+        data.lastname !== null &&
+        data.address !== null
+      ) {
         this.setState({
-          firstname: firstname,
-          lastname: lastname,
-          address: address,
+          firstname: data.firstname,
+          lastname: data.lastname,
+          address: data.address,
         });
       } else {
         alert("Δεν έχουν αποθηκευτεί στοιχεία");
@@ -151,6 +156,7 @@ export default class Form extends Component {
     );
   };
   async componentDidMount() {
+    //await AsyncStorage.clear()
     try {
       const autoLoad = JSON.parse(await AsyncStorage.getItem("@autoLoad"));
       if (autoLoad !== null) {
@@ -168,7 +174,7 @@ export default class Form extends Component {
     return (
       <View style={styles.mainContainer}>
         <View style={styles.pickerContainer}>
-          <Text style={{color:Colors.white}}>Λόγος μετακίνησης:</Text>
+          <Text style={{ color: Colors.white }}>Λόγος μετακίνησης:</Text>
           <Picker
             selectedValue={this.state.selection || ""}
             style={styles.picker}
@@ -203,21 +209,21 @@ export default class Form extends Component {
           </Picker>
         </View>
         <View style={styles.textInputContainer}>
-          <Text style={{ color:Colors.white }}>Όνομα:</Text>
+          <Text style={{ color: Colors.white }}>Όνομα:</Text>
           <TextInput
             style={styles.textInput}
             defaultValue={this.state.firstname}
             onChangeText={(value) => this.handleInputChange("firstname", value)}
           />
 
-          <Text style={{ color:Colors.white }}>Επίθετο:</Text>
+          <Text style={{ color: Colors.white }}>Επίθετο:</Text>
           <TextInput
             style={styles.textInput}
             defaultValue={this.state.lastname}
             onChangeText={(value) => this.handleInputChange("lastname", value)}
           />
 
-          <Text style={{ color:Colors.white }}>Διεύθυνση:</Text>
+          <Text style={{ color: Colors.white }}>Διεύθυνση:</Text>
           <TextInput
             style={styles.textInput}
             defaultValue={this.state.address}
@@ -229,7 +235,7 @@ export default class Form extends Component {
         <View style={styles.buttonsContainer}>
           <TouchableOpacity
             style={styles.button}
-            onPress={() => this.onPress()}
+            onPress={() => this.sendSMS()}
           >
             <Text>Αποστολη</Text>
           </TouchableOpacity>
@@ -239,17 +245,17 @@ export default class Form extends Component {
           >
             <Text>Αποθηκευση στοιχειων</Text>
           </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => this.autoLoad()}
-              style={[
-                styles.button,
-                this.state.autoLoad
-                  ? { backgroundColor: Colors.PrimaryColor }
-                  : { backgroundColor: Colors.disabled },
-              ]}
-            >
-              <Text>Αυτόματη φόρτωση στοιχείων</Text>
-            </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => this.autoLoad()}
+            style={[
+              styles.button,
+              this.state.autoLoad
+                ? { backgroundColor: Colors.PrimaryColor }
+                : { backgroundColor: Colors.disabled },
+            ]}
+          >
+            <Text>Αυτόματη φόρτωση στοιχείων</Text>
+          </TouchableOpacity>
         </View>
         <Text style={styles.createdBy}>Created by Manos Gouvrikos</Text>
       </View>
@@ -308,7 +314,7 @@ const styles = StyleSheet.create({
   },
   button: {
     alignItems: "center",
-    backgroundColor:Colors.white,
+    backgroundColor: Colors.white,
     padding: 10,
     borderWidth: 1,
     justifyContent: "center",
