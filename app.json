@@ -3,12 +3,11 @@
     "name": "13033-SMS",
     "slug": "13033-sms",
     "version": "1.0.0",
-    "sdkVersion": "36.0.0",
     "orientation": "portrait",
-  "android":{
-    "package":"gou.manos.smsapp",
-    "versionCode":1,
-    "permissions":[]
-  }
+    "android": {
+      "package": "gou.manos.smsapp",
+      "versionCode": 1,
+      "permissions": []
+    }
   }
 }
