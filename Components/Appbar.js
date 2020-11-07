@@ -1,63 +1,32 @@
-import React, { useState } from 'react';
-import { Appbar } from 'material-bread';
-import { View, Text, StyleSheet } from 'react-native';
-
-
-
-
-
-
-const styles = StyleSheet.create({
-    appbar: {
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        height: 80,
-        paddingVertical: 0,
-        paddingHorizontal: 8,
-        backgroundColor:'#006400'
-    },
-    center: {
-        flex: 1,
-        alignItems: 'center'
-
-    },
-    title: {
-        color: '#eee',
-        textAlign: 'center',
-        fontSize: 28,
-        marginTop: 30,
-        
-
-    },
-    
-
-});
-
-
+import React from "react";
+import { View, Text, StyleSheet } from "react-native";
 
 export default function Topbar() {
-
-
-
-
-    return (
-
-        <View>
-            <Appbar style={styles.appbar} >
-
-
-                <View style={styles.center}>
-                    <Text style={styles.title}>13033-SMS📨</Text>
-                </View>
-
-            </Appbar >
-
-
-        </View>
-
-    );
-
-
-
-
+  return (
+    <View style={styles.header}>
+      <Text style={styles.title}>13033-SMS📨</Text>
+    </View>
+  );
 }
+
+const styles = StyleSheet.create({
+  header: {
+    alignItems: 'center',
+    height: 80,
+    width:'100%',
+    backgroundColor:'#006400'
+  },
+  title: {
+    textAlign: "center",
+    fontSize: 28,
+    color: "white",
+    letterSpacing: 4,
+    fontFamily: "Lobster",
+    marginTop: 30,
+  },
+  trashIcon: {
+    position: "absolute",
+    right: 15,
+    top: 40,
+  },
+});
