@@ -19,9 +19,13 @@ export default class Form extends Component {
     super(props);
     this.state = {
       selection: "",
+      selectionError: "",
       lastname: "",
+      lastnameError: "",
       firstname: "",
+      firstnameError: "",
       address: "",
+      addressError: "",
       autoLoad: false,
     };
   }
@@ -39,22 +43,20 @@ export default class Form extends Component {
     const isAvailable = await SMS.isAvailableAsync();
     if (isAvailable) {
       console.log("SMS is available on this device");
-      if (this.checkInput() === true && this.checkSelection() === true) {
-        const { result } = await SMS.sendSMSAsync(
+      if (this.handleValidation() && this.checkSelection()) {
+        await SMS.sendSMSAsync(
           ["13033"],
           this.getFinalMsg()
         );
-      } else {
-        alert("Παρακαλώ συμπληρώστε όλα τα στοιχεία");
       }
     } else {
-      alert("Το κινητό σας δεν υποστηρίζει αποστολή μηνυμάτων SMS");
+      alert("Το κινητό σας δεν υποστηρίζει αποστολή μηνυμάτων SMS.");
     }
   };
 
   storeData = async () => {
-    if (this.checkInput() === true) {
-        let data={};
+    if (this.handleValidation()) {
+      let data = {};
       try {
         data = JSON.parse(await AsyncStorage.getItem("@data"));
       } catch (e) {
@@ -65,7 +67,7 @@ export default class Form extends Component {
         data.lastname === this.state.lastname &&
         data.address === this.state.address
       ) {
-        alert("Τα στοιχεία έχουν ήδη αποθηκευτεί");
+        alert("Τα στοιχεία έχουν ήδη αποθηκευτεί.");
       } else {
         let data = {
           lastname: this.state.lastname,
@@ -105,7 +107,7 @@ export default class Form extends Component {
           address: data.address,
         });
       } else {
-        alert("Δεν έχουν αποθηκευτεί στοιχεία");
+        alert("Δεν έχουν αποθηκευτεί στοιχεία.");
       }
     } catch (e) {
       console.log("error reading value");
@@ -116,20 +118,29 @@ export default class Form extends Component {
     if (this.state.selection != "") {
       return true;
     } else {
+      this.setState({ selectionError: "Παρακαλώ επιλέξτε λόγο μετακίνησης." });
       return false;
     }
   };
 
-  checkInput = () => {
-    if (this.state.firstname.trim() != "") {
-      if (this.state.lastname.trim() != "") {
-        if (this.state.address.trim() != "") {
-          return true;
-        }
-      }
-    } else {
-      return false;
+  handleValidation = () => {
+    let inputIsValid = true;
+    if (!this.state.firstname.trim()) {
+      inputIsValid = false;
+      this.setState({ firstnameError: "Παρακαλώ εισάγετε όνομα." });
     }
+
+    if (!this.state.lastname.trim()) {
+      inputIsValid = false;
+      this.setState({ lastnameError: "Παρακαλώ εισάγετε επίθετο." });
+    }
+
+    if (!this.state.address.trim()) {
+      inputIsValid = false;
+      this.setState({ addressError: "Παρακαλώ εισάγετε διεύθυνση." });
+    }
+
+    return inputIsValid;
   };
 
   autoLoad = () => {
@@ -176,6 +187,7 @@ export default class Form extends Component {
         <View style={styles.pickerContainer}>
           <Text style={{ color: Colors.white }}>Λόγος μετακίνησης:</Text>
           <Picker
+            defaultValue="0"
             selectedValue={this.state.selection || ""}
             style={styles.picker}
             onValueChange={(value) =>
@@ -207,6 +219,9 @@ export default class Form extends Component {
               value="6"
             />
           </Picker>
+          <Text style={{ color: Colors.disabled, textAlign: "center" }}>
+            {this.state.selectionError}
+          </Text>
         </View>
         <View style={styles.textInputContainer}>
           <Text style={{ color: Colors.white }}>Όνομα:</Text>
@@ -215,20 +230,27 @@ export default class Form extends Component {
             defaultValue={this.state.firstname}
             onChangeText={(value) => this.handleInputChange("firstname", value)}
           />
-
+          <Text style={{ color: Colors.disabled, textAlign: "center" }}>
+            {this.state.firstnameError}
+          </Text>
           <Text style={{ color: Colors.white }}>Επίθετο:</Text>
           <TextInput
             style={styles.textInput}
             defaultValue={this.state.lastname}
             onChangeText={(value) => this.handleInputChange("lastname", value)}
           />
-
+          <Text style={{ color: Colors.disabled, textAlign: "center" }}>
+            {this.state.lastnameError}
+          </Text>
           <Text style={{ color: Colors.white }}>Διεύθυνση:</Text>
           <TextInput
             style={styles.textInput}
             defaultValue={this.state.address}
             onChangeText={(value) => this.handleInputChange("address", value)}
           />
+          <Text style={{ color: Colors.disabled, textAlign: "center" }}>
+            {this.state.addressError}
+          </Text>
         </View>
         <Text style={styles.previewText}>Προεπισκόπηση μηνύματος</Text>
         <Text style={styles.previewBox}>{this.getFinalMsg()}</Text>
