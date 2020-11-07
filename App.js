@@ -1,10 +1,13 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet,View } from 'react-native';
 
 
 //Components
 import AppBar from './Components/Appbar.js';
 import Form from './Components/Form.js';
+
+//Colors
+import {Colors} from './Colors';
 
 export default class App extends Component {
 
@@ -21,7 +24,7 @@ export default class App extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#121212',
+    backgroundColor:Colors.BackgroundColor,
     alignItems: 'center',
     justifyContent: 'center',
   },

@@ -11,6 +11,10 @@ import * as SMS from "expo-sms";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Picker } from "@react-native-picker/picker";
 
+//Colors
+import {Colors} from '../Colors';
+
+
 export default class Form extends Component {
   constructor(props) {
     super(props);
@@ -154,8 +158,6 @@ export default class Form extends Component {
       }
       if (this.state.autoLoad) {
         this.getData();
-      } else {
-        alert("Ουπς τα δεδομένα δεν μπόρεσαν να ανακτηθούν αυτόματα");
       }
     } catch (e) {
       console.log("saving error");
@@ -166,9 +168,8 @@ export default class Form extends Component {
     return (
       <View style={styles.mainContainer}>
         <View style={styles.pickerContainer}>
-          <Text style={{ color: "#eee" }}>Λόγος μετακίνησης:</Text>
+          <Text style={{color:Colors.white}}>Λόγος μετακίνησης:</Text>
           <Picker
-            defaultValue="test"
             selectedValue={this.state.selection || ""}
             style={styles.picker}
             onValueChange={(value) =>
@@ -179,7 +180,7 @@ export default class Form extends Component {
             <Picker.Item
               label="Επιλέγξτε λόγο μετακίνησης"
               value="0"
-              color="grey"
+              color={Colors.grey}
             />
             <Picker.Item
               label="Μετάβαση σε φαρμακείο ή στον γιατρό."
@@ -202,21 +203,21 @@ export default class Form extends Component {
           </Picker>
         </View>
         <View style={styles.textInputContainer}>
-          <Text style={{ color: "#eee" }}>Όνομα:</Text>
+          <Text style={{ color:Colors.white }}>Όνομα:</Text>
           <TextInput
             style={styles.textInput}
             defaultValue={this.state.firstname}
             onChangeText={(value) => this.handleInputChange("firstname", value)}
           />
 
-          <Text style={{ color: "#eee" }}>Επίθετο:</Text>
+          <Text style={{ color:Colors.white }}>Επίθετο:</Text>
           <TextInput
             style={styles.textInput}
             defaultValue={this.state.lastname}
             onChangeText={(value) => this.handleInputChange("lastname", value)}
           />
 
-          <Text style={{ color: "#eee" }}>Διεύθυνση:</Text>
+          <Text style={{ color:Colors.white }}>Διεύθυνση:</Text>
           <TextInput
             style={styles.textInput}
             defaultValue={this.state.address}
@@ -238,12 +239,17 @@ export default class Form extends Component {
           >
             <Text>Αποθηκευση στοιχειων</Text>
           </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => this.autoLoad()}
-            style={[styles.button,this.state.autoLoad?{backgroundColor:'#006400'}:{backgroundColor:'#B33A3A'}]}
-          >
-            <Text>Αυτόματη φόρτωση στοιχείων</Text>
-          </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => this.autoLoad()}
+              style={[
+                styles.button,
+                this.state.autoLoad
+                  ? { backgroundColor: Colors.PrimaryColor }
+                  : { backgroundColor: Colors.disabled },
+              ]}
+            >
+              <Text>Αυτόματη φόρτωση στοιχείων</Text>
+            </TouchableOpacity>
         </View>
         <Text style={styles.createdBy}>Created by Manos Gouvrikos</Text>
       </View>
@@ -260,8 +266,8 @@ const styles = StyleSheet.create({
   },
   textInput: {
     borderBottomWidth: 1,
-    borderBottomColor: "grey",
-    color: "#eee",
+    borderBottomColor: Colors.grey,
+    color: Colors.white,
   },
   textInputContainer: {
     flex: 1,
@@ -271,43 +277,42 @@ const styles = StyleSheet.create({
   buttonsContainer: {
     flex: 1,
     flexDirection: "column",
-    justifyContent: "space-around",
+    justifyContent: "space-evenly",
     padding: 30,
     color: "#006400",
   },
 
   previewBox: {
-    borderColor: "grey",
-    borderWidth: 2,
-    borderRadius: 10,
-    padding: 10,
-    color: "#eee",
+    borderColor: Colors.grey,
+    borderWidth: 1,
+    borderRadius: 5,
+    padding: 12,
+    color: Colors.white,
   },
   previewText: {
     textAlign: "center",
     marginTop: 30,
-    color: "#eee",
+    color: Colors.white,
   },
   createdBy: {
     fontSize: 7,
     textAlign: "center",
     marginTop: 10,
-    color: "#eee",
+    color: Colors.white,
   },
   picker: {
-    color: "#eee",
+    color: Colors.white,
   },
   pickerContainer: {
-    marginTop: 20,
+    marginTop: 30,
   },
   button: {
     alignItems: "center",
-    backgroundColor: "#DDDDDD",
+    backgroundColor:Colors.white,
     padding: 10,
     borderWidth: 1,
-    borderColor: "rgba(0,0,0,0.2)",
     justifyContent: "center",
     borderRadius: 20,
-    color: "#121212",
+    color: Colors.white,
   },
 });

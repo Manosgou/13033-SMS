@@ -1,6 +1,9 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 
+//Colors
+import {Colors} from '../Colors';
+
 export default function Topbar() {
   return (
     <View style={styles.header}>
@@ -14,12 +17,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     height: 80,
     width:'100%',
-    backgroundColor:'#006400'
+    backgroundColor:Colors.PrimaryColor
   },
   title: {
     textAlign: "center",
     fontSize: 28,
-    color: "white",
+    color: Colors.white,
     letterSpacing: 4,
     fontFamily: "Lobster",
     marginTop: 30,
