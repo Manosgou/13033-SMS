@@ -3,13 +3,15 @@ import { StyleSheet, Text, View } from 'react-native';
 
 
 //Components
-import Form from './Form.js'
+import AppBar from './Components/Appbar.js';
+import Form from './Components/Form.js';
 
 export default class App extends Component {
 
   render() {
     return (
       <View style={styles.container}>
+        <AppBar/>
         <Form/>
       </View>
     );

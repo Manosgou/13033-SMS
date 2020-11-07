@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { StyleSheet, Text, View, TextInput, TouchableOpacity, AsyncStorage, Picker } from 'react-native';
 import * as SMS from 'expo-sms';
 
-import Appbar from './Appbar.js';
 
 export default class Form extends Component {
 
@@ -146,94 +145,7 @@ export default class Form extends Component {
 
 
     render() {
-
-        const styles = StyleSheet.create({
-            mainContainer: {
-                flex: 1,
-                flexDirection: 'column',
-                justifyContent: 'space-between',
-                width: 300,
-
-
-            },
-            textInput: {
-                borderBottomWidth: 1,
-                borderBottomColor: "grey",
-                color: '#eee'
-
-            },
-            textInputContainer: {
-                flex: 1,
-                flexDirection: 'column',
-                justifyContent: 'space-between',
-
-
-            },
-            buttonsContainer: {
-                flex: 1,
-                flexDirection: 'column',
-                justifyContent: 'space-around',
-                padding: 30,
-                color: '#006400'
-            },
-
-            previewBox: {
-                borderColor: "grey",
-                borderWidth: 2,
-                borderRadius: 10,
-                padding: 10,
-                color: '#eee'
-
-            },
-            previewText: {
-                textAlign: "center",
-                marginTop: 30,
-                color: '#eee'
-
-            },
-            createdBy: {
-                fontSize: 7,
-                textAlign: 'center',
-                marginTop: 10,
-                color: '#eee'
-            },
-            picker: {
-
-                color: '#eee',
-
-
-
-            },
-            pickerContainer: {
-
-                marginTop: 20,
-            },
-            button: {
-                alignItems: "center",
-                backgroundColor: "#DDDDDD",
-                padding: 10,
-                borderWidth: 1,
-                borderColor: 'rgba(0,0,0,0.2)',
-                justifyContent: 'center',
-                borderRadius: 20,
-                color: '#121212'
-            },
-
-
-
-
-        });
-
-
-
-
-
-
-
-
-
-        return (<>
-            <Appbar />
+        return (
             <View style={styles.mainContainer}>
                 <View style={styles.pickerContainer}>
                     <Text style={{ color: '#eee' }}>Λόγος μετακίνησης:</Text>
@@ -314,7 +226,6 @@ export default class Form extends Component {
                 </Text>
 
             </View >
-        </>
         );
 
 
@@ -326,3 +237,80 @@ export default class Form extends Component {
 
 
 }
+
+const styles = StyleSheet.create({
+    mainContainer: {
+        flex: 1,
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+        width: 300,
+
+
+    },
+    textInput: {
+        borderBottomWidth: 1,
+        borderBottomColor: "grey",
+        color: '#eee'
+
+    },
+    textInputContainer: {
+        flex: 1,
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+
+
+    },
+    buttonsContainer: {
+        flex: 1,
+        flexDirection: 'column',
+        justifyContent: 'space-around',
+        padding: 30,
+        color: '#006400'
+    },
+
+    previewBox: {
+        borderColor: "grey",
+        borderWidth: 2,
+        borderRadius: 10,
+        padding: 10,
+        color: '#eee'
+
+    },
+    previewText: {
+        textAlign: "center",
+        marginTop: 30,
+        color: '#eee'
+
+    },
+    createdBy: {
+        fontSize: 7,
+        textAlign: 'center',
+        marginTop: 10,
+        color: '#eee'
+    },
+    picker: {
+
+        color: '#eee',
+
+
+
+    },
+    pickerContainer: {
+
+        marginTop: 20,
+    },
+    button: {
+        alignItems: "center",
+        backgroundColor: "#DDDDDD",
+        padding: 10,
+        borderWidth: 1,
+        borderColor: 'rgba(0,0,0,0.2)',
+        justifyContent: 'center',
+        borderRadius: 20,
+        color: '#121212'
+    },
+
+
+
+
+});
