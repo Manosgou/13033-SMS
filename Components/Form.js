@@ -10,6 +10,7 @@ import * as SMS from "expo-sms";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Picker } from "@react-native-picker/picker";
+import CheckBox from "@react-native-community/checkbox";
 
 //Colors
 import { Colors } from "../Colors";
@@ -26,7 +27,6 @@ export default class Form extends Component {
       firstnameError: "",
       address: "",
       addressError: "",
-      autoLoad: false,
     };
   }
 
@@ -43,11 +43,11 @@ export default class Form extends Component {
     const isAvailable = await SMS.isAvailableAsync();
     if (isAvailable) {
       console.log("SMS is available on this device");
-      if (this.handleValidation() && this.checkSelection()) {
-        await SMS.sendSMSAsync(
-          ["13033"],
-          this.getFinalMsg()
-        );
+      if (
+        (this.handleValidation() && this.checkSelection()) ||
+        this.checkSelection()
+      ) {
+        await SMS.sendSMSAsync(["13033"], this.getFinalMsg());
       }
     } else {
       alert("Το κινητό σας δεν υποστηρίζει αποστολή μηνυμάτων SMS.");
@@ -55,7 +55,12 @@ export default class Form extends Component {
   };
 
   storeData = async () => {
-    if (this.handleValidation()) {
+    let keys = [];
+    try {
+      keys = await AsyncStorage.getAllKeys();
+    } catch (e) {}
+
+    if (keys.includes("@data")) {
       let data = {};
       try {
         data = JSON.parse(await AsyncStorage.getItem("@data"));
@@ -68,28 +73,28 @@ export default class Form extends Component {
         data.address === this.state.address
       ) {
         alert("Τα στοιχεία έχουν ήδη αποθηκευτεί.");
-      } else {
-        let data = {
-          lastname: this.state.lastname,
-          firstname: this.state.firstname,
-          address: this.state.address,
-        };
-        try {
-          await AsyncStorage.setItem("@data", JSON.stringify(data));
-          alert(
-            "Επιτυχής αποθήκεσυη!\nΌνομα:" +
-              this.state.firstname +
-              "\nΕπίθετο:" +
-              this.state.lastname +
-              "\nΔιεύθυνση:" +
-              this.state.address
-          );
-        } catch (e) {
-          console.log("saving error");
-        }
+        return;
       }
-    } else {
-      alert("Συμπληρώστε όλα τα πεδία");
+    }
+    if (this.handleValidation()) {
+      let data = {
+        lastname: this.state.lastname,
+        firstname: this.state.firstname,
+        address: this.state.address,
+      };
+      try {
+        await AsyncStorage.setItem("@data", JSON.stringify(data));
+        alert(
+          "Επιτυχής αποθήκεσυη!\nΌνομα:" +
+            this.state.firstname +
+            "\nΕπίθετο:" +
+            this.state.lastname +
+            "\nΔιεύθυνση:" +
+            this.state.address
+        );
+      } catch (e) {
+        console.log("saving error");
+      }
     }
   };
 
@@ -251,32 +256,40 @@ export default class Form extends Component {
           <Text style={{ color: Colors.disabled, textAlign: "center" }}>
             {this.state.addressError}
           </Text>
+          <View style={{paddingLeft:60,paddingRight:60}}>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => this.storeData()}
+            >
+              <Text>Αποθηκευση στοιχειων</Text>
+            </TouchableOpacity>
+          </View>
         </View>
-        <Text style={styles.previewText}>Προεπισκόπηση μηνύματος</Text>
-        <Text style={styles.previewBox}>{this.getFinalMsg()}</Text>
+        <View
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <Text style={{ color: Colors.white }}>
+            Αυτόματη φόρτωση στοιχείων:{" "}
+          </Text>
+          <CheckBox
+            value={this.state.autoLoad}
+            onValueChange={() => this.autoLoad()}
+          />
+        </View>
+        <View>
+          <Text style={styles.previewText}>Προεπισκόπηση μηνύματος</Text>
+          <Text style={styles.previewBox}>{this.getFinalMsg()}</Text>
+        </View>
         <View style={styles.buttonsContainer}>
           <TouchableOpacity
             style={styles.button}
             onPress={() => this.sendSMS()}
           >
             <Text>Αποστολη</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => this.storeData()}
-          >
-            <Text>Αποθηκευση στοιχειων</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => this.autoLoad()}
-            style={[
-              styles.button,
-              this.state.autoLoad
-                ? { backgroundColor: Colors.PrimaryColor }
-                : { backgroundColor: Colors.disabled },
-            ]}
-          >
-            <Text>Αυτόματη φόρτωση στοιχείων</Text>
           </TouchableOpacity>
         </View>
         <Text style={styles.createdBy}>Created by Manos Gouvrikos</Text>
@@ -289,7 +302,6 @@ const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
     flexDirection: "column",
-    justifyContent: "space-between",
     width: 300,
   },
   textInput: {
@@ -298,15 +310,12 @@ const styles = StyleSheet.create({
     color: Colors.white,
   },
   textInputContainer: {
-    flex: 1,
-    flexDirection: "column",
-    justifyContent: "space-between",
+    height: 250,
   },
   buttonsContainer: {
     flex: 1,
-    flexDirection: "column",
-    justifyContent: "space-evenly",
-    padding: 30,
+    justifyContent: "center",
+    padding: 50,
     color: "#006400",
   },
 
@@ -323,23 +332,21 @@ const styles = StyleSheet.create({
     color: Colors.white,
   },
   createdBy: {
-    fontSize: 7,
     textAlign: "center",
-    marginTop: 10,
+    fontSize: 7,
     color: Colors.white,
   },
   picker: {
     color: Colors.white,
   },
   pickerContainer: {
-    marginTop: 30,
+    marginTop: 50,
   },
   button: {
     alignItems: "center",
     backgroundColor: Colors.white,
     padding: 10,
     borderWidth: 1,
-    justifyContent: "center",
     borderRadius: 20,
     color: Colors.white,
   },

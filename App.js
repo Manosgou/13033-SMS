@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet,View } from 'react-native';
+import { SafeAreaView, StyleSheet,View } from 'react-native';
 
 
 //Components
@@ -13,10 +13,10 @@ export default class App extends Component {
 
   render() {
     return (
-      <View style={styles.container}>
+      <SafeAreaView style={styles.container}>
         <AppBar/>
         <Form/>
-      </View>
+      </SafeAreaView>
     );
   }
 }
@@ -26,6 +26,5 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor:Colors.BackgroundColor,
     alignItems: 'center',
-    justifyContent: 'center',
   },
 });
