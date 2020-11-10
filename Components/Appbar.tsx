@@ -7,7 +7,7 @@ import {Colors} from '../Colors';
 export default function Topbar() {
   return (
     <View style={styles.header}>
-      <Text style={styles.title}>13033-SMS📨</Text>
+      <Text style={styles.title}>13033-SMS</Text>
     </View>
   );
 }
@@ -21,10 +21,13 @@ const styles = StyleSheet.create({
   },
   title: {
     textAlign: "center",
-    fontSize: 28,
+    alignItems:'center',
+    marginTop:20,
+    fontSize: 40,
+    fontFamily:'Oswald-Regular',
     color: Colors.white,
     letterSpacing: 4,
-    marginTop: 30,
+    
   },
   trashIcon: {
     position: "absolute",

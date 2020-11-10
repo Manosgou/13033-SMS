@@ -76,7 +76,7 @@ export default class Form extends Component<IState> {
         address: "",
       };
       try {
-        data = JSON.parse(await AsyncStorage.getItem("@data") || "");
+        data = JSON.parse((await AsyncStorage.getItem("@data")) || "");
       } catch (e) {
         console.log("saving error");
       }
@@ -113,7 +113,7 @@ export default class Form extends Component<IState> {
 
   getData = async () => {
     try {
-      const data = JSON.parse(await AsyncStorage.getItem("@data") || "");
+      const data = JSON.parse((await AsyncStorage.getItem("@data")) || "");
       if (
         data.firstname !== null &&
         data.lastname !== null &&
@@ -162,7 +162,7 @@ export default class Form extends Component<IState> {
   };
 
   autoLoad = () => {
-    this.setState({ autoLoad: !this.state.autoLoad }, async  () => {
+    this.setState({ autoLoad: !this.state.autoLoad }, async () => {
       try {
         await AsyncStorage.setItem(
           "@autoLoad",
@@ -187,7 +187,9 @@ export default class Form extends Component<IState> {
   async componentDidMount() {
     // await AsyncStorage.clear()
     try {
-      const autoLoad = JSON.parse(await AsyncStorage.getItem("@autoLoad") || "");
+      const autoLoad = JSON.parse(
+        (await AsyncStorage.getItem("@autoLoad")) || ""
+      );
       if (autoLoad !== null) {
         this.setState({ autoLoad: autoLoad });
       }
@@ -240,40 +242,46 @@ export default class Form extends Component<IState> {
             {this.state.selectionError}
           </Text>
         </View>
-        <View style={styles.textInputContainer}>
-          <Text style={{ color: Colors.white }}>Όνομα:</Text>
-          <TextInput
-            style={styles.textInput}
-            defaultValue={this.state.firstname}
-            onChangeText={(value) => this.handleInputChange("firstname", value)}
-          />
-          <Text style={{ color: Colors.disabled, textAlign: "center" }}>
-            {this.state.firstnameError}
-          </Text>
-          <Text style={{ color: Colors.white }}>Επίθετο:</Text>
-          <TextInput
-            style={styles.textInput}
-            defaultValue={this.state.lastname}
-            onChangeText={(value) => this.handleInputChange("lastname", value)}
-          />
-          <Text style={{ color: Colors.disabled, textAlign: "center" }}>
-            {this.state.lastnameError}
-          </Text>
-          <Text style={{ color: Colors.white }}>Διεύθυνση:</Text>
-          <TextInput
-            style={styles.textInput}
-            defaultValue={this.state.address}
-            onChangeText={(value) => this.handleInputChange("address", value)}
-          />
-          <Text style={{ color: Colors.disabled, textAlign: "center" }}>
-            {this.state.addressError}
-          </Text>
+        <View>
+          <View>
+            <Text style={{ color: Colors.white }}>Όνομα:</Text>
+            <TextInput
+              style={styles.textInput}
+              defaultValue={this.state.firstname}
+              onChangeText={(value) =>
+                this.handleInputChange("firstname", value)
+              }
+            />
+            <Text style={{ color: Colors.disabled, textAlign: "center" }}>
+              {this.state.firstnameError}
+            </Text>
+            <Text style={{ color: Colors.white }}>Επίθετο:</Text>
+            <TextInput
+              style={styles.textInput}
+              defaultValue={this.state.lastname}
+              onChangeText={(value) =>
+                this.handleInputChange("lastname", value)
+              }
+            />
+            <Text style={{ color: Colors.disabled, textAlign: "center" }}>
+              {this.state.lastnameError}
+            </Text>
+            <Text style={{ color: Colors.white }}>Διεύθυνση:</Text>
+            <TextInput
+              style={styles.textInput}
+              defaultValue={this.state.address}
+              onChangeText={(value) => this.handleInputChange("address", value)}
+            />
+            <Text style={{ color: Colors.disabled, textAlign: "center" }}>
+              {this.state.addressError}
+            </Text>
+          </View>
           <View style={{ paddingLeft: 60, paddingRight: 60 }}>
             <TouchableOpacity
               style={styles.button}
               onPress={() => this.storeData()}
             >
-              <Text>Αποθηκευση στοιχειων</Text>
+              <Text style={{ color: "#000" }}>Αποθηκευση στοιχειων</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -301,7 +309,7 @@ export default class Form extends Component<IState> {
             style={styles.button}
             onPress={() => this.sendSMS()}
           >
-            <Text>Αποστολη</Text>
+            <Text style={{ color: "#000" }}>Αποστολη</Text>
           </TouchableOpacity>
         </View>
         <Text style={styles.createdBy}>Created by Manos Gouvrikos</Text>
@@ -320,9 +328,6 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: Colors.grey,
     color: Colors.white,
-  },
-  textInputContainer: {
-    height: 250,
   },
   buttonsContainer: {
     flex: 1,
